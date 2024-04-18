@@ -5,6 +5,17 @@ import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
+    // Перенаправление запросов к Swagger UI файлам на CDN
+    app.use('/api/swagger-ui.css', (req, res) => {
+        res.redirect('https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css');
+    });
+    app.use('/api/swagger-ui-bundle.js', (req, res) => {
+        res.redirect('https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js');
+    });
+    app.use('/api/swagger-ui-standalone-preset.js', (req, res) => {
+        res.redirect('https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-standalone-preset.js');
+    });
+
 
     const options = new DocumentBuilder()
         .setTitle('KickShoes')
@@ -14,18 +25,7 @@ async function bootstrap() {
         .addTag('categories')
         .build();
     const document = SwaggerModule.createDocument(app, options);
-
-    SwaggerModule.setup('api', app, document, {
-        swaggerOptions: {
-            // ...
-            // Добавляем свойства для указания на CDN unpkg
-            customJs: 'https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js',
-            customCss: 'https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css',
-        },
-        // Путь для загрузки файла swagger-ui-standalone-preset.js
-        customJs: 'https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-standalone-preset.js',
-    });
-
+    SwaggerModule.setup('api', app, document);
 
     await app.listen(3000);
 }
