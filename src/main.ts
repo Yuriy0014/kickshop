@@ -14,7 +14,18 @@ async function bootstrap() {
         .addTag('categories')
         .build();
     const document = SwaggerModule.createDocument(app, options);
-    SwaggerModule.setup('api', app, document);
+
+    SwaggerModule.setup('api', app, document, {
+        swaggerOptions: {
+            // ...
+            // Добавляем свойства для указания на CDN unpkg
+            customJs: 'https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js',
+            customCss: 'https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css',
+        },
+        // Путь для загрузки файла swagger-ui-standalone-preset.js
+        customJs: 'https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-standalone-preset.js',
+    });
+
 
     await app.listen(3000);
 }
